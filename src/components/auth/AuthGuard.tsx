@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useSyncExternalStore, type ReactNode } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { getToken, subscribeToken } from "@/lib/session";
 
 /**
@@ -10,17 +10,18 @@ import { getToken, subscribeToken } from "@/lib/session";
  */
 export function AuthGuard({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const pathname = usePathname();
 
   // ฝั่ง server / ตอน hydrate ยังไม่รู้ token → undefined (แสดง loading)
   const token = useSyncExternalStore<string | null | undefined>(subscribeToken, getToken, () => undefined);
 
   useEffect(() => {
     if (token === null) {
+      // อ่าน path จาก window ตอนจะ redirect (ไม่ใช้ usePathname — ทำให้หน้าที่มี [id] prerender ไม่ได้ เมื่อเปิด cacheComponents)
+      const pathname = window.location.pathname;
       const next = pathname && pathname !== "/" ? `?next=${encodeURIComponent(pathname)}` : "";
       router.replace(`/login${next}`);
     }
-  }, [token, pathname, router]);
+  }, [token, router]);
 
   if (!token) {
     return (

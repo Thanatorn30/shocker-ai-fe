@@ -63,7 +63,7 @@ export function ChatApp() {
   );
   if (!isClient) {
     return (
-      <div className="flex h-dvh items-center justify-center text-sm text-zinc-400">
+      <div className="flex h-full items-center justify-center text-sm text-zinc-400">
         กำลังโหลด…
       </div>
     );
@@ -301,7 +301,7 @@ function ChatAppInner() {
   if (loading || (dbAsleep && conversations.length === 0)) {
     return (
       <>
-        <div className="flex h-dvh flex-col items-center justify-center gap-3 text-sm text-zinc-400">
+        <div className="flex h-full flex-col items-center justify-center gap-3 text-sm text-zinc-400">
           {!dbAsleep && (
             <span
               aria-hidden
@@ -334,7 +334,7 @@ function ChatAppInner() {
           </button>
         </div>
       )}
-      <div className="grid h-dvh grid-cols-1 overflow-hidden md:grid-cols-[340px_1fr] xl:grid-cols-[340px_1fr_auto]">
+      <div className="grid h-full grid-cols-1 overflow-hidden md:grid-cols-[340px_1fr] xl:grid-cols-[340px_1fr_auto]">
         <div className={`min-h-0 ${selected ? "hidden md:block" : "block"}`}>
           <ConversationList
             conversations={conversations}

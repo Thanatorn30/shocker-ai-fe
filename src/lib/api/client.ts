@@ -30,9 +30,18 @@ http.interceptors.request.use((config) => {
 // (ถ้าเชื่อมต่อไม่ได้เลย = ไม่มี response → โยน error เดิมของ axios ออกไป)
 http.interceptors.response.use(
   (res) => res,
-  (err: unknown) => {
+  async (err: unknown) => {
     if (err instanceof AxiosError && err.response) {
-      const { status, statusText, data } = err.response;
+      const { status, statusText } = err.response;
+      let data: unknown = err.response.data;
+      // คำขอแบบไฟล์ (responseType: "blob") → error ของ BE มาเป็น Blob JSON
+      if (typeof Blob !== "undefined" && data instanceof Blob && data.type.includes("json")) {
+        try {
+          data = JSON.parse(await data.text());
+        } catch {
+          data = undefined;
+        }
+      }
       // token ใช้ไม่ได้แล้ว → ลบทิ้ง แล้ว AuthGuard จะดีดไปหน้า login เอง
       if (status === 401 && getToken()) clearToken();
       const message = (data as { error?: string } | undefined)?.error ?? statusText;
