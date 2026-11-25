@@ -15,7 +15,7 @@ export const DOC_TYPE_LABEL: Record<BillDocType, string> = {
   receipt: "ใบเสร็จรับเงิน",
   tax_invoice: "ใบกำกับภาษี",
   invoice: "ใบแจ้งหนี้ / ใบวางบิล",
-  other: "อื่นๆ",
+  other: "คืนสินค้า",
 };
 
 export const STATUS_LABEL: Record<BillStatus, string> = {
